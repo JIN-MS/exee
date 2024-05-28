@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodge the Poop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #start-button, #info-button, #highscore-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #start-button:hover, #info-button:hover, #highscore-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="menu-container">
+        <button id="start-button">Start Game</button>
+        <button id="info-button">Game Info</button>
+        <button id="highscore-button">High Scores</button>
+    </div>
+
+    <script>
+        // Start button event listener
+        document.getElementById("start-button").addEventListener("click", function() {
+            window.location.href = "index.html"; // Link to the game page
+        });
+
+        // Info button event listener
+        document.getElementById("info-button").addEventListener("click", function() {
+            alert("Dodge the falling poop and try to get the highest score!");
+        });
+
+        // Highscore button event listener
+        document.getElementById("highscore-button").addEventListener("click", function() {
+            // Retrieve high scores from local storage or a server and display them
+            alert("High Scores: Not implemented yet!");
+        });
+    </script>
+</body>
+</html>

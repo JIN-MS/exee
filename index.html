@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dodge the Poop Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Remove scrolling */
+            margin: 0;
+            padding: 0;
+        }
+        #game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #character {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: blue;
+        }
+        .poop {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('images/dong.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="character"></div>
+        <div id="score">Score: 0</div>
+    </div>
+
+    <script>
+        var characterWidth = 50;
+        var gameWidth = window.innerWidth;
+        var gameHeight = window.innerHeight;
+
+        var characterLeftPosition = gameWidth / 2 - characterWidth / 2;
+        var characterElement = document.getElementById("character");
+        var scoreElement = document.getElementById("score");
+        var score = 0;
+
+        characterElement.style.left = characterLeftPosition + "px";
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "ArrowLeft") {
+                moveCharacterLeft();
+            } else if (event.key === "ArrowRight") {
+                moveCharacterRight();
+            }
+        });
+
+        function moveCharacterLeft() {
+            if (characterLeftPosition > 0) {
+                characterLeftPosition -= 10;
+                characterElement.style.left = characterLeftPosition + "px";
+            }
+        }
+
+        function moveCharacterRight() {
+            if (characterLeftPosition < gameWidth - characterWidth) {
+                characterLeftPosition += 10;
+                characterElement.style.left = characterLeftPosition + "px";
+            }
+        }
+
+        function dropPoop() {
+            var poopElement = document.createElement("div");
+            poopElement.classList.add("poop");
+            poopElement.style.left = Math.floor(Math.random() * (gameWidth - characterWidth)) + "px";
+            poopElement.style.top = "0px"; // Initialize the top position
+            document.getElementById("game-container").appendChild(poopElement);
+
+            var animationInterval = setInterval(function() {
+                var topPosition = poopElement.offsetTop;
+                if (topPosition >= gameHeight - 50) {
+                    clearInterval(animationInterval);
+                    poopElement.remove();
+                    updateScore();
+                } else if (isCollision(poopElement, characterElement)) {
+                    clearInterval(animationInterval);
+                    poopElement.remove();
+                    resetGame();
+                } else {
+                    poopElement.style.top = (topPosition + 10) + "px";
+                }
+            }, 50);
+        }
+
+        function isCollision(poop, character) {
+            var poopRect = poop.getBoundingClientRect();
+            var characterRect = character.getBoundingClientRect();
+            return !(
+                poopRect.top > characterRect.bottom ||
+                poopRect.bottom < characterRect.top ||
+                poopRect.left > characterRect.right ||
+                poopRect.right < characterRect.left
+            );
+        }
+
+        function updateScore() {
+            score++;
+            scoreElement.textContent = "Score: " + score;
+        }
+
+        function resetGame() {
+            alert("Game Over! Score: " + score);
+            score = 0;
+            scoreElement.textContent = "Score: " + score;
+            characterLeftPosition = gameWidth / 2 - characterWidth / 2;
+            characterElement.style.left = characterLeftPosition + "px";
+            var poops = document.querySelectorAll(".poop");
+            poops.forEach(function(poop) {
+                poop.remove();
+            });
+        }
+
+        setInterval(dropPoop, 2000);
+    </script>
+</body>
+</html>
